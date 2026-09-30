@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarihi İlk Masa Radyosu - Uzun, Orta, Kısa ve FM Dalgaları</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      background: radial-gradient(circle at center, #24140b 0%, #120703 60%, #050201 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      font-family: 'Georgia', serif;
+      color: #e5c158;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .radio-chassis {
+      max-width: 600px;
+      width: 100%;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #5c2c15 0%, #36170a 45%, #1f0c05 100%);
+      border: 3px solid #8b5a2b;
+      border-radius: 0;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.95);
+      overflow-y: auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    @media (min-width: 601px) {
+      body {
+        padding: 12px;
+        justify-content: center;
+      }
+      .radio-chassis {
+        min-height: auto;
+        border-radius: 20px;
+        border-width: 4px;
+      }
+    }
+    .top-crown {
+      background: #1f0b04;
+      border-bottom: 2px solid #b8860b;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      color: #ffd700;
+      flex-shrink: 0;
+    }
+    .radio-hero-img {
+      max-height: 160px;
+      object-fit: cover;
+      width: 100%;
+      display: block;
+    }
+    .control-deck {
+      padding: 10px 14px 14px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .status-panel {
+      background: #120904;
+      border: 1px solid #5a3e20;
+      border-radius: 6px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .station-title {
+      font-size: 12px;
+      color: #fff8e1;
+      font-weight: bold;
+    }
+    .band-badge {
+      font-size: 10px;
+      color: #ffb300;
+    }
+    .freq-display {
+      font-family: 'Courier New', monospace;
+      font-size: 15px;
+      font-weight: bold;
+      color: #ffe57f;
+    }
+    .dial-magic-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .magic-eye {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: #0d180f;
+      border: 3.5px solid #8b6508;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.9);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .magic-phosphor {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #33ff88 0%, #00dd44 40%, #004411 90%);
+      transition: clip-path 0.2s ease;
+      box-shadow: 0 0 15px #00ff66;
+    }
+    .magic-cap {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #444, #111);
+      border: 1px solid #b8860b;
+    }
+    .tuning-dial-box {
+      flex-grow: 1;
+      height: 140px;
+      background: radial-gradient(circle at center, #361905 0%, #180a02 70%, #0a0401 100%);
+      border: 3px solid #b8860b;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      cursor: ew-resize;
+      box-shadow: inset 0 0 25px rgba(255,140,0,0.25);
+    }
+    .dial-track {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      height: 28px;
+      border-bottom: 1px solid rgba(184,134,11,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+      font-size: 8.5px;
+      color: #c49e52;
+    }
+    .dial-track.active {
+      color: #ffe57f;
+      font-weight: bold;
+      border-bottom: 1px solid #ffd700;
+      background: rgba(255,215,0,0.08);
+    }
+    .dial-needle {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      width: 2.5px;
+      background: linear-gradient(to bottom, #ff1744, #d50000);
+      box-shadow: 0 0 6px #ff1744;
+      left: 50%;
+      pointer-events: none;
+      transform: translateX(-50%);
+      transition: left 0.05s linear;
+    }
+    .band-keys {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .piano-key {
+      flex: 1;
+      padding: 10px 4px;
+      background: linear-gradient(to bottom, #e8dcc4 0%, #a89474 100%);
+      border: 1.5px solid #4a3525;
+      border-radius: 4px;
+      color: #24140b;
+      font-weight: bold;
+      font-size: 10px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.6);
+      transition: all 0.1s ease;
+    }
+    .piano-key.active {
+      background: linear-gradient(to bottom, #c49e52 0%, #5a4004 100%);
+      color: #fff8e1;
+      transform: translateY(3px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 8px #ff9900;
+      border-color: #ffd700;
+    }
+    .knobs-row {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .knob-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .knob {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #332014 0%, #150903 100%);
+      border: 3px solid #8b6508;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.8), inset 0 0 8px #000;
+      position: relative;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .knob-center {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffe082 0%, #8b6508 100%);
+    }
+    .knob-dot {
+      position: absolute;
+      top: 6px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #ff1744;
+    }
+    .knob-label {
+      font-size: 9px;
+      font-weight: bold;
+      color: #c49e52;
+      letter-spacing: 1px;
+    }
+    .power-btn {
+      padding: 3px 8px;
+      font-size: 8px;
+      font-weight: bold;
+      border-radius: 4px;
+      border: 1px solid #555;
+      background: #222;
+      color: #aaa;
+      cursor: pointer;
+    }
+    .power-btn.on {
+      background: #50120b;
+      color: #ff8a80;
+      border-color: #ff5252;
+      box-shadow: 0 0 6px rgba(255,82,82,0.6);
+    }
+    .tubes-chassis {
+      background: #100a06;
+      border: 1px solid #6b4c1b;
+      border-radius: 6px;
+      padding: 6px 10px;
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .tube {
+      width: 20px;
+      height: 40px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px 6px 2px 2px;
+      background: rgba(40,25,15,0.6);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .filament {
+      width: 3px;
+      height: 20px;
+      background: #ffd54f;
+      border-radius: 2px;
+      box-shadow: 0 0 8px #ff3d00;
+    }
+    .tube-label {
+      font-size: 7px;
+      color: #c49e52;
+      text-align: center;
+      margin-top: 2px;
+    }
+    audio { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="radio-chassis">
+    <!-- Top Crown -->
+    <div class="top-crown">
+      <span>✦ YAZGAN BİLEŞİM • MODEL 1938 ✦</span>
+      <span id="antenna-badge" style="cursor: pointer;" onclick="toggleAntenna()">📡 ANTEN: AÇIK</span>
+    </div>
+
+    <!-- Photo Showcase of the Radio -->
+    <div style="position: relative; overflow: hidden; border-bottom: 2px solid #b8860b;">
+      <img src="retro_radio.jpg" class="radio-hero-img" alt="Yazgan Bileşim Klasik Masa Radyosu" onerror="this.style.display='none'">
+    </div>
+
+    <!-- Controls Deck -->
+    <div class="control-deck">
+      <!-- Status Box -->
+      <div class="status-panel">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="band-badge" id="band-name">FM DALGASI (UKW)</div>
+            <div id="live-indicator" style="display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-weight: bold; color: #ff5252; background: rgba(255,82,82,0.15); border: 1px solid rgba(255,82,82,0.4); padding: 2px 6px; border-radius: 10px;">
+              <span id="live-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #ff5252; display: inline-block;"></span>
+              <span id="live-label">CANLI YAYIN (STREAM)</span>
+            </div>
+          </div>
+          <div class="station-title" id="station-name">Kral FM (İlaç Gibi Radyo - Arabesk) (Türkiye Geneli)</div>
+        </div>
+        <div class="freq-display" id="freq-text">92.00 MHz</div>
+      </div>
+
+      <!-- Magic Eye + Tuning Dial -->
+      <div class="dial-magic-row">
+        <!-- Magic Eye Tube -->
+        <div style="text-align:center;">
+          <div class="magic-eye" id="magic-tube">
+            <div class="magic-phosphor" id="magic-fan"></div>
+            <div class="magic-cap"></div>
+          </div>
+          <div style="font-size: 7.5px; color: #c49e52; margin-top: 3px; font-weight: bold;">SİHİRLİ GÖZ</div>
+        </div>
+
+        <!-- Glass Scale -->
+        <div class="tuning-dial-box" id="dial-glass" onmousedown="startDialDrag(event)" ontouchstart="startDialTouch(event)">
+          <div class="dial-track active" id="track-fm" style="top: 8px;">
+            <span>FM</span><span>90.5 (İslami)</span><span>92 (Kral TSM)</span><span>93.5 (Kabe Kur'an)</span><span>95.3 (Slow)</span><span>97.5 (Arapça)</span><span>100.5 (Gold)</span><span>102.5 (Bozkır)</span><span>108</span>
+          </div>
+          <div class="dial-track" id="track-sw" style="top: 38px;">
+            <span>SW</span><span>6.09 (Mekke Kabe)</span><span>7.20 (Medine Ravza)</span><span>9.54 (Cidde Hac)</span><span>11.82 (Türkiye'nin Sesi)</span><span>15.31 (BBC Türkçe)</span><span>18 MHz</span>
+          </div>
+          <div class="dial-track" id="track-mw" style="top: 68px;">
+            <span>MW</span><span>576 (TRT Çukurova)</span><span>702 (TRT İzmir)</span><span>891 (TRT Antalya)</span><span>1017 (TRT İstanbul Harbiye)</span><span>1422 (TRT GAP)</span><span>1600 kHz</span>
+          </div>
+          <div class="dial-track" id="track-lw" style="top: 98px;">
+            <span>LW</span><span>153 (Romanya)</span><span>180 (TRT Ankara)</span><span>198 (Kahire Sawt al-Arab)</span><span>216 (Paris)</span><span>252 (Taş Plak)</span><span>280 kHz</span>
+          </div>
+          <div class="dial-needle" id="needle"></div>
+        </div>
+      </div>
+
+      <!-- Piano Band Keys -->
+      <div class="band-keys">
+        <div class="piano-key" id="key-lw" onclick="setBand('LW')">UZUN (LW)<br><small>150-280k</small></div>
+        <div class="piano-key" id="key-mw" onclick="setBand('MW')">ORTA (MW)<br><small>TRT 530-1600k</small></div>
+        <div class="piano-key" id="key-sw" onclick="setBand('SW')">KISA (SW)<br><small>Mekke/Medine</small></div>
+        <div class="piano-key active" id="key-fm" onclick="setBand('FM')">FM (UKW)<br><small>İslami/Pop/TSM</small></div>
+      </div>
+
+      <!-- Rotary Knobs -->
+      <div class="knobs-row">
+        <div class="knob-wrap">
+          <div class="knob" id="knob-vol"><div class="knob-center"></div><div class="knob-dot"></div></div>
+          <div class="knob-label">GÜÇ & SES</div>
+          <button class="power-btn on" id="pwr-btn" onclick="togglePower()">AÇIK (ON)</button>
+        </div>
+
+        <div class="knob-wrap">
+          <div class="knob" id="knob-tune"><div class="knob-center"></div><div class="knob-dot"></div></div>
+          <div class="knob-label">İNCE AYAR</div>
+        </div>
+      </div>
+
+      <!-- Tubes Chassis -->
+      <div class="tubes-chassis">
+        <div><div class="tube"><div class="filament"></div></div><div class="tube-label">ECH81</div></div>
+        <div><div class="tube"><div class="filament"></div></div><div class="tube-label">EF89</div></div>
+        <div><div class="tube"><div class="filament"></div></div><div class="tube-label">EABC80</div></div>
+        <div><div class="tube"><div class="filament" style="height:25px;"></div></div><div class="tube-label">EL84</div></div>
+        <div><div class="tube"><div class="filament"></div></div><div class="tube-label">EZ80</div></div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="radio-audio" loop></audio>
+
+  <script>
+    const BANDS = {
+      LW: { name: 'UZUN DALGA (LW)', min: 140, max: 290, unit: 'kHz', step: 1, current: 180 },
+      MW: { name: 'ORTA DALGA (TRT RADYOLARI - MW / AM)', min: 520, max: 1620, unit: 'kHz', step: 5, current: 1017 },
+      SW: { name: 'KISA DALGA (MEKKE, MEDİNE, CİDDE - SW)', min: 5.8, max: 18.2, unit: 'MHz', step: 0.05, current: 6.09 },
+      FM: { name: 'FM DALGASI (İSLAMİ, SANAT, HALK - UKW)', min: 87.5, max: 108.0, unit: 'MHz', step: 0.1, current: 92.0 }
+    };
+
+    const STATIONS = [
+      // LW - TARİHİ UZUN DALGA
+      { band: 'LW', freq: 180, name: 'TRT Ankara Radyosu (Sanat Müziği & Taş Plak)', city: 'Ankara - Polatlı', stream: 'https://listen.181fm.com/181-greatoldies_128k.mp3' },
+      { band: 'LW', freq: 198, name: 'Kahire Radyosu (Sawt al-Arab - Arapça Tarihi)', city: 'Kahire / Mısır', stream: 'https://stream.radioparadise.com/world-etc-128' },
+      { band: 'LW', freq: 216, name: 'Radio France Inter (Fransız Şanson)', city: 'Paris', stream: 'https://listen.181fm.com/181-goodtime_128k.mp3' },
+      { band: 'LW', freq: 153, name: 'Radyo Romanya Uluslararası', city: 'Brașov', stream: 'https://stream.radioparadise.com/world-etc-128' },
+      { band: 'LW', freq: 252, name: 'Nostalji Alaturka (Taş Plak Fasıl)', city: 'İstanbul Harbiye', stream: 'https://listen.181fm.com/181-soul_128k.mp3' },
+      
+      // MW - TRT RADYOLARI (ORTA DALGA)
+      { band: 'MW', freq: 1017, name: 'TRT İstanbul Radyosu (Harbiye Stüdyoları)', city: 'İstanbul Harbiye', stream: 'https://listen.powerapp.com.tr/powergold/mpeg/icecast.audio' },
+      { band: 'MW', freq: 576, name: 'TRT Çukurova Radyosu (Bölge Yayını)', city: 'Mersin / Adana', stream: 'https://listen.powerapp.com.tr/powerlove/mpeg/icecast.audio' },
+      { band: 'MW', freq: 702, name: 'TRT İzmir Radyosu (Ege Türküleri & Fasıl)', city: 'İzmir Kültürpark', stream: 'https://live.radyofenomen.com/fenomenakustik/mpeg/icecast.audio' },
+      { band: 'MW', freq: 891, name: 'TRT Antalya Radyosu (Akdeniz Kuşağı)', city: 'Antalya', stream: 'https://listen.181fm.com/181-greatoldies_128k.mp3' },
+      { band: 'MW', freq: 1422, name: 'TRT GAP & Diyarbakır Radyosu (Türküler)', city: 'Diyarbakır / GAP', stream: 'https://yayin.damarfm.com:8080/;stream.mp3' },
+      
+      // SW - KISA DALGA: MEKKE, MEDİNE, CİDDE & DÜNYA SERVİSLERİ
+      { band: 'SW', freq: 6.09, name: 'Mekke-i Mükerreme Radyosu (Kabe-i Muazzama)', city: 'Mekke (Mescid-i Haram)', stream: 'https://qurango.net/radio/abdulbasit_abdulsamad_mojawwad' },
+      { band: 'SW', freq: 7.20, name: 'Medine-i Münevvere Radyosu (Mescid-i Nebevi)', city: 'Medine (Ravza-i Mutahhara)', stream: 'https://qurango.net/radio/ali_jaber' },
+      { band: 'SW', freq: 9.54, name: 'Cidde Radyosu (Hac & Umre İslami Yayını)', city: 'Cidde (Saudi Arabia)', stream: 'https://qurango.net/radio/maher_al_mueaqly' },
+      { band: 'SW', freq: 11.82, name: 'Türkiye\'nin Sesi Radyosu (Voice of Turkey - SW)', city: 'Ankara Çakırlar', stream: 'https://listen.powerapp.com.tr/powergold/mpeg/icecast.audio' },
+      { band: 'SW', freq: 15.31, name: 'BBC Türkçe Servisi (Londra Kısa Dalga)', city: 'Londra Bush House', stream: 'https://stream.radioparadise.com/world-etc-128' },
+
+      // FM - İSLAMİ YAYINLAR, SANAT, HALK & POPÜLER KANALLAR
+      { band: 'FM', freq: 90.5, name: 'İslami Kur\'an & İlahi Kuşağı (7/24)', city: 'Türkiye Geneli', stream: 'https://qurango.net/radio/mishary_alafasi' },
+      { band: 'FM', freq: 92.0, name: 'Kral FM (Klasik Sanat Müziği & Arabesk)', city: 'Türkiye Geneli', stream: 'http://kralwmp.radyotvonline.com' },
+      { band: 'FM', freq: 93.5, name: 'Kabe-i Muazzama Canlı Yayını (FM Tilavet)', city: 'Mekke / Anadolu', stream: 'https://qurango.net/radio/saud_alshuraim' },
+      { band: 'FM', freq: 95.3, name: 'Slow Türk (Aşkın Frekansı)', city: 'İstanbul', stream: 'https://radyo.duhnet.tv/slowturk' },
+      { band: 'FM', freq: 97.5, name: 'Radyo Doğu Akdeniz (Arapça Şarkılar & Tarab)', city: 'Hatay / Adana', stream: 'https://icecast.skyrock.net/s/alger_aac_64k' },
+      { band: 'FM', freq: 99.8, name: 'Power Türk Efsane Şarkılar (Rock/Pop)', city: 'İstanbul / Marmara', stream: 'https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio' },
+      { band: 'FM', freq: 100.5, name: 'Power Gold (Türk Sanat & Nostalji Altın Hit)', city: 'Türkiye Geneli', stream: 'https://listen.powerapp.com.tr/powergold/mpeg/icecast.audio' },
+      { band: 'FM', freq: 102.5, name: 'Bozkırın Nefesi (Türk Halk Müziği & Deyişler)', city: 'Anadolu Geneli', stream: 'https://yayin.damarfm.com:8080/;stream.mp3' },
+      { band: 'FM', freq: 103.8, name: 'Power Love Nostalji (Marmara Romantik)', city: 'Bursa / Marmara', stream: 'https://listen.powerapp.com.tr/powerlove/mpeg/icecast.audio' },
+      { band: 'FM', freq: 105.0, name: 'Karadeniz Türküleri & Horon (Halk Müziği)', city: 'Trabzon / Rize', stream: 'https://live.radyofenomen.com/fenomenakustik/mpeg/icecast.audio' },
+      { band: 'FM', freq: 106.2, name: 'Fenomen Türk Nostalji 90\'lar', city: 'İstanbul / Başkent', stream: 'https://live.radyofenomen.com/fenomenturk/mpeg/icecast.audio' }
+    ];
+
+    let currentBandKey = 'FM';
+    let isPowered = true;
+    let antenna = true;
+    let audioCtx = null;
+    let noiseNode = null;
+    let gainNode = null;
+
+    function initAudioSynth() {
+      if (audioCtx) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        
+        // Static white noise buffer
+        const bufferSize = audioCtx.sampleRate * 2;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+
+        gainNode = audioCtx.createGain();
+        gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
+
+        whiteNoise.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        whiteNoise.start(0);
+      } catch(e) {}
+    }
+
+    function updateUI() {
+      const band = BANDS[currentBandKey];
+      const freq = band.current;
+      document.getElementById('band-name').innerText = band.name;
+      document.getElementById('freq-text').innerText = (freq >= 100 ? freq.toFixed(0) : freq.toFixed(2)) + ' ' + band.unit;
+
+      // Needle position
+      const fraction = (freq - band.min) / (band.max - band.min);
+      const dialBox = document.getElementById('dial-glass');
+      const needle = document.getElementById('needle');
+      const xPercent = (8 + fraction * 84);
+      needle.style.left = xPercent + '%';
+
+      // Match station
+      const tolerance = currentBandKey === 'SW' ? 0.2 : (currentBandKey === 'FM' ? 0.4 : (currentBandKey === 'LW' ? 5 : 15));
+      const match = STATIONS.find(s => s.band === currentBandKey && Math.abs(s.freq - freq) <= tolerance);
+      
+      const magicFan = document.getElementById('magic-fan');
+      const stationTitle = document.getElementById('station-name');
+      const liveIndicator = document.getElementById('live-indicator');
+      const liveDot = document.getElementById('live-dot');
+      const liveLabel = document.getElementById('live-label');
+
+      if (!isPowered) {
+        stationTitle.innerText = 'Cihaz Kapalı';
+        magicFan.style.opacity = '0.1';
+        if (gainNode) gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+        if (liveIndicator) {
+          liveIndicator.style.display = 'none';
+        }
+        stopStream();
+        return;
+      }
+
+      if (match) {
+        const diff = Math.abs(match.freq - freq);
+        const strength = Math.max(0, 1 - (diff / tolerance));
+        stationTitle.innerText = match.name + ' (' + match.city + ')';
+        magicFan.style.opacity = (0.5 + 0.5 * strength).toString();
+        magicFan.style.transform = `scale(${0.8 + 0.2 * strength})`;
+
+        if (liveIndicator) {
+          liveIndicator.style.display = 'inline-flex';
+          liveIndicator.style.color = '#00e676';
+          liveIndicator.style.background = 'rgba(0,230,118,0.15)';
+          liveIndicator.style.border = '1px solid rgba(0,230,118,0.4)';
+          liveDot.style.background = '#00e676';
+          liveLabel.innerText = strength > 0.8 ? 'CANLI YAYIN (NET AKIŞ)' : 'CANLI YAYIN (CIZIRTILI)';
+        }
+        
+        if (gainNode && audioCtx) {
+          gainNode.gain.setValueAtTime((1 - strength) * 0.05 * volumeLevel, audioCtx.currentTime);
+        }
+
+        if (strength > 0.3) {
+          playStream(match.stream, strength * volumeLevel);
+        } else {
+          stopStream();
+        }
+      } else {
+        stationTitle.innerText = 'Frekans Taranıyor... (Atmosferik Parazit)';
+        magicFan.style.opacity = '0.25';
+        magicFan.style.transform = 'scale(0.7)';
+        if (liveIndicator) {
+          liveIndicator.style.display = 'inline-flex';
+          liveIndicator.style.color = '#ff9100';
+          liveIndicator.style.background = 'rgba(255,145,0,0.15)';
+          liveIndicator.style.border = '1px solid rgba(255,145,0,0.4)';
+          liveDot.style.background = '#ff9100';
+          liveLabel.innerText = 'FREKANS TARANIYOR';
+        }
+        if (gainNode && audioCtx) {
+          gainNode.gain.setValueAtTime(0.06 * volumeLevel, audioCtx.currentTime);
+        }
+        stopStream();
+      }
+    }
+
+    let activeStreamUrl = '';
+    function playStream(url, vol) {
+      const audio = document.getElementById('radio-audio');
+      if (activeStreamUrl !== url) {
+        activeStreamUrl = url;
+        audio.src = url;
+        audio.volume = Math.max(0, Math.min(1, vol));
+        audio.play().catch(() => {});
+      } else {
+        audio.volume = Math.max(0, Math.min(1, vol));
+        if (audio.paused) audio.play().catch(() => {});
+      }
+    }
+
+    function stopStream() {
+      const audio = document.getElementById('radio-audio');
+      if (!audio.paused) {
+        audio.pause();
+      }
+      activeStreamUrl = '';
+    }
+
+    let volumeLevel = 0.75;
+    let toneLevel = 0.60;
+
+    function setBand(bandKey) {
+      initAudioSynth();
+      currentBandKey = bandKey;
+      ['LW', 'MW', 'SW', 'FM'].forEach(b => {
+        document.getElementById('key-' + b.toLowerCase()).classList.toggle('active', b === bandKey);
+        document.getElementById('track-' + b.toLowerCase()).classList.toggle('active', b === bandKey);
+      });
+      updateUI();
+    }
+
+    function togglePower() {
+      initAudioSynth();
+      isPowered = !isPowered;
+      const btn = document.getElementById('pwr-btn');
+      btn.classList.toggle('on', isPowered);
+      btn.innerText = isPowered ? 'AÇIK (ON)' : 'KAPALI (OFF)';
+      document.querySelectorAll('.filament').forEach(f => {
+        f.style.opacity = isPowered ? '1' : '0.1';
+      });
+      updateUI();
+    }
+
+    function toggleAntenna() {
+      antenna = !antenna;
+      document.getElementById('antenna-badge').innerText = antenna ? '📡 ANTEN: AÇIK' : '📡 ANTEN: KAPALI';
+      updateUI();
+    }
+
+    function startDialDrag(e) {
+      initAudioSynth();
+      handleDialMove(e.clientX);
+      function onMove(ev) { handleDialMove(ev.clientX); }
+      function onUp() {
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup', onUp);
+      }
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
+    }
+
+    function startDialTouch(e) {
+      initAudioSynth();
+      if (e.touches.length > 0) handleDialMove(e.touches[0].clientX);
+      function onTouchMove(ev) {
+        if (ev.touches.length > 0) handleDialMove(ev.touches[0].clientX);
+      }
+      function onTouchEnd() {
+        window.removeEventListener('touchmove', onTouchMove);
+        window.removeEventListener('touchend', onTouchEnd);
+      }
+      window.addEventListener('touchmove', onTouchMove);
+      window.addEventListener('touchend', onTouchEnd);
+    }
+
+    function handleDialMove(clientX) {
+      const dialBox = document.getElementById('dial-glass');
+      const rect = dialBox.getBoundingClientRect();
+      const normX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      const band = BANDS[currentBandKey];
+      band.current = band.min + normX * (band.max - band.min);
+      updateUI();
+      updateKnobsRotation();
+    }
+
+    // Rotary Knobs Interactivity
+    function setupKnobDrag(knobId, onDelta) {
+      const knob = document.getElementById(knobId);
+      if (!knob) return;
+      let startY = 0;
+      function onStart(clientY) {
+        initAudioSynth();
+        startY = clientY;
+        function onMove(ev) {
+          const cy = ev.touches ? ev.touches[0].clientY : ev.clientY;
+          const dy = startY - cy;
+          startY = cy;
+          onDelta(dy);
+        }
+        function onEnd() {
+          window.removeEventListener('mousemove', onMove);
+          window.removeEventListener('mouseup', onEnd);
+          window.removeEventListener('touchmove', onMove);
+          window.removeEventListener('touchend', onEnd);
+        }
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onEnd);
+        window.addEventListener('touchmove', onMove);
+        window.addEventListener('touchend', onEnd);
+      }
+      knob.addEventListener('mousedown', e => onStart(e.clientY));
+      knob.addEventListener('touchstart', e => { if (e.touches.length > 0) onStart(e.touches[0].clientY); });
+    }
+
+    let knobTuneAngle = 0;
+    setupKnobDrag('knob-vol', dy => {
+      volumeLevel = Math.max(0, Math.min(1, volumeLevel + dy * 0.015));
+      const volAngle = -135 + volumeLevel * 270;
+      document.getElementById('knob-vol').style.transform = `rotate(${volAngle}deg)`;
+      updateUI();
+    });
+
+    setupKnobDrag('knob-tone', dy => {
+      toneLevel = Math.max(0, Math.min(1, toneLevel + dy * 0.015));
+      const toneAngle = -135 + toneLevel * 270;
+      document.getElementById('knob-tone').style.transform = `rotate(${toneAngle}deg)`;
+    });
+
+    setupKnobDrag('knob-tune', dy => {
+      const band = BANDS[currentBandKey];
+      band.current = Math.max(band.min, Math.min(band.max, band.current + dy * band.step * 0.4));
+      updateUI();
+      updateKnobsRotation();
+    });
+
+    function updateKnobsRotation() {
+      const band = BANDS[currentBandKey];
+      const frac = (band.current - band.min) / (band.max - band.min);
+      const angle = -135 + frac * 270;
+      document.getElementById('knob-tune').style.transform = `rotate(${angle}deg)`;
+      const volAngle = -135 + volumeLevel * 270;
+      document.getElementById('knob-vol').style.transform = `rotate(${volAngle}deg)`;
+      const toneAngle = -135 + toneLevel * 270;
+      document.getElementById('knob-tone').style.transform = `rotate(${toneAngle}deg)`;
+    }
+
+    updateKnobsRotation();
+    updateUI();
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Nostalji Radyo</string>
+    <string name="title_activity_main">Nostalji Radyo</string>
+    <string name="package_name">com.yazganbilesim.nostalji_radyo</string>
+    <string name="custom_url_scheme">com.yazganbilesim.nostalji_radyo</string>
+</resources>
