@@ -67,6 +67,6 @@ flutter run
 
 ## 👨‍💻 Geliştirici
 
-**Nihat Yazgan** — Yazgan Bileşim  
+**Nihat Yazgan** — Yazgan Bilişim  
 Web: [yazganbilesim.com](https://yazganbilesim.com)  
 GitHub: [@nihatyazgan1962](https://github.com/nihatyazgan1962)
